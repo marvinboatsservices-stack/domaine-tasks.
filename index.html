@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0f172a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>Domaine Les Bois de Peygros</title>
+<style>
+:root{--bg:#f5f7fb;--card:#fff;--ink:#12213d;--muted:#667085;--line:#e5e9f0;--blue:#1677ff;--green:#16a34a;--red:#dc2626;--orange:#d97706;--purple:#7c3aed}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}button,input,select,textarea{font:inherit}
+.app{max-width:820px;margin:auto;min-height:100vh;padding-bottom:92px}
+.hero{padding:calc(18px + env(safe-area-inset-top)) 18px 20px;background:linear-gradient(135deg,#0b1730,#254a7d);color:#fff}
+.hero h1{margin:0;font-size:29px}.hero p{margin:5px 0 0;opacity:.8}.heroline{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.iconbtn{border:0;background:rgba(255,255,255,.14);color:#fff;border-radius:12px;padding:9px 11px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:14px}.stat{background:#fff;border:1px solid var(--line);border-radius:16px;padding:12px 7px;text-align:center}.stat b{display:block;font-size:22px}.stat span{font-size:11px;color:var(--muted)}
+.toolbar{display:flex;gap:8px;padding:0 14px 12px}.toolbar input,.toolbar select{min-width:0;flex:1;border:1px solid var(--line);border-radius:12px;padding:11px;background:#fff}
+.page{display:none;padding:0 14px}.page.active{display:block}.page h2{font-size:19px;margin:8px 0 11px}
+.task,.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:10px;box-shadow:0 3px 12px rgba(15,23,42,.04)}
+.task-top{display:flex;justify-content:space-between;gap:10px}.task h3{margin:0 0 5px;font-size:16px}.meta{font-size:12px;color:var(--muted);line-height:1.55}.notes{margin-top:8px;font-size:13px;white-space:pre-wrap}
+.badge{font-size:11px;font-weight:750;padding:5px 8px;border-radius:999px;white-space:nowrap;height:max-content}.urgent{background:#fee2e2;color:#991b1b}.high{background:#ffedd5;color:#9a3412}.normal{background:#dbeafe;color:#1e40af}.low{background:#e5e7eb;color:#374151}
+.actions{display:flex;gap:7px;margin-top:11px;flex-wrap:wrap}.actions button,.smallbtn{border:0;border-radius:9px;padding:8px 10px;font-weight:650;background:#eef2ff;color:#243b63}.actions .danger,.danger{background:#fee2e2;color:#991b1b}.primary{background:var(--blue)!important;color:#fff!important}
+.progress{height:7px;background:#edf0f4;border-radius:999px;overflow:hidden;margin:9px 0}.progress i{display:block;height:100%;background:var(--green)}
+.photos{display:flex;gap:7px;overflow:auto;margin-top:9px}.photos img{width:72px;height:72px;object-fit:cover;border-radius:10px;border:1px solid var(--line)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.metric{background:#fff;border:1px solid var(--line);border-radius:15px;padding:13px}.metric b{font-size:20px;display:block}.metric span{font-size:12px;color:var(--muted)}
+.quick{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-bottom:12px}.quick button{border:1px solid var(--line);background:#fff;border-radius:15px;padding:14px;text-align:left;font-weight:700}
+.empty{text-align:center;color:var(--muted);padding:34px 10px}.fab{position:fixed;right:18px;bottom:calc(76px + env(safe-area-inset-bottom));z-index:5;border:0;background:var(--blue);color:#fff;width:58px;height:58px;border-radius:50%;font-size:30px;box-shadow:0 8px 24px rgba(22,119,255,.35)}
+.nav{position:fixed;z-index:4;left:0;right:0;bottom:0;background:rgba(255,255,255,.96);border-top:1px solid var(--line);padding:7px 6px calc(7px + env(safe-area-inset-bottom));display:flex;justify-content:center;backdrop-filter:blur(12px)}
+.navinner{max-width:820px;width:100%;display:grid;grid-template-columns:repeat(5,1fr)}.nav button{border:0;background:none;color:#667085;font-size:10px;padding:5px 2px}.nav button b{display:block;font-size:20px;margin-bottom:2px}.nav button.active{color:var(--blue)}
+dialog{border:0;border-radius:20px;width:min(94vw,560px);max-height:90vh;padding:0;box-shadow:0 20px 60px rgba(0,0,0,.25)}dialog::backdrop{background:rgba(15,23,42,.55)}.modal{padding:18px;overflow:auto;max-height:90vh}.modal h2{margin:0 0 14px}.field{margin-bottom:11px}.field label{display:block;font-size:12px;font-weight:750;margin-bottom:5px;color:#475467}.field input,.field select,.field textarea{width:100%;padding:11px;border:1px solid #d0d5dd;border-radius:10px;background:#fff}.field textarea{min-height:78px;resize:vertical}.row{display:grid;grid-template-columns:1fr 1fr;gap:9px}.modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:14px}.modal-actions button{border:0;border-radius:10px;padding:10px 14px;font-weight:700}.save{background:var(--blue);color:#fff}.cancel{background:#eef0f4}.filelabel{display:block;border:1px dashed #aab2c0;border-radius:12px;padding:12px;text-align:center;color:#475467}
+.listrow{display:flex;justify-content:space-between;gap:10px;align-items:center}.money{font-weight:800}.overdue{color:var(--red)!important;font-weight:700}
+@media(max-width:520px){.stats{grid-template-columns:repeat(2,1fr)}.row{grid-template-columns:1fr}.hero h1{font-size:26px}}
+@media print{.nav,.fab,.toolbar,.hero .iconbtn,.actions{display:none!important}.app{padding:0}.page{display:block!important}.page:not(#tasksPage){display:none!important}.hero{background:#fff;color:#000;padding:10px 14px}.task{break-inside:avoid;box-shadow:none}}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="hero"><div class="heroline"><div><h1>Domaine Les Bois de Peygros</h1><p id="today"></p></div><button class="iconbtn" onclick="openBackup()">⚙️ Sauvegarde</button></div></header>
+
+<div id="dashboardPage" class="page active">
+  <div class="stats">
+    <div class="stat"><b id="sTodo">0</b><span>À faire</span></div><div class="stat"><b id="sDoing">0</b><span>En cours</span></div>
+    <div class="stat"><b id="sWaiting">0</b><span>En attente</span></div><div class="stat"><b id="sDone">0</b><span>Terminées</span></div>
+  </div>
+  <h2>Tableau de bord</h2>
+  <div class="grid2">
+    <div class="metric"><b id="mLate">0</b><span>En retard</span></div>
+    <div class="metric"><b id="mMonth">0 €</b><span>Dépenses ce mois</span></div>
+  </div>
+  <h2>Accès rapides</h2>
+  <div class="quick"><button onclick="openTask()">➕ Nouvelle tâche</button><button onclick="showPage('tasksPage')">📋 Toutes les tâches</button><button onclick="openExpense()">💶 Ajouter une dépense</button><button onclick="showPage('providersPage')">👷 Prestataires</button></div>
+  <h2>À traiter en priorité</h2><div id="priorityList"></div>
+</div>
+
+<div id="tasksPage" class="page">
+  <h2>Tâches & interventions</h2>
+  <div class="toolbar" style="padding:0 0 12px"><input id="search" placeholder="🔎 Rechercher"><select id="filter"><option value="">Tous</option><option>À faire</option><option>En cours</option><option>En attente</option><option>Terminée</option></select></div>
+  <div id="tasks"></div>
+</div>
+
+<div id="calendarPage" class="page"><h2>Agenda</h2><div id="agenda"></div></div>
+
+<div id="expensesPage" class="page">
+  <h2>Dépenses & achats</h2>
+  <div class="grid2"><div class="metric"><b id="expenseTotal">0 €</b><span>Total enregistré</span></div><div class="metric"><b id="expenseMonth">0 €</b><span>Ce mois</span></div></div>
+  <div style="height:10px"></div><button class="smallbtn primary" onclick="openExpense()">+ Ajouter une dépense</button><div style="height:10px"></div><div id="expenses"></div>
+</div>
+
+<div id="providersPage" class="page">
+  <h2>Prestataires & contacts</h2><button class="smallbtn primary" onclick="openProvider()">+ Ajouter un prestataire</button><div style="height:10px"></div><div id="providers"></div>
+</div>
+
+<button class="fab" id="fab" onclick="openTask()">+</button>
+</div>
+
+<nav class="nav"><div class="navinner">
+<button class="active" data-page="dashboardPage" onclick="showPage('dashboardPage',this)"><b>⌂</b>Accueil</button>
+<button data-page="tasksPage" onclick="showPage('tasksPage',this)"><b>☷</b>Tâches</button>
+<button data-page="calendarPage" onclick="showPage('calendarPage',this)"><b>▣</b>Agenda</button>
+<button data-page="expensesPage" onclick="showPage('expensesPage',this)"><b>€</b>Dépenses</button>
+<button data-page="providersPage" onclick="showPage('providersPage',this)"><b>♟</b>Contacts</button>
+</div></nav>
+
+<dialog id="taskDlg"><form class="modal" id="taskForm">
+<h2 id="taskModalTitle">Nouvelle tâche</h2><input type="hidden" id="editId">
+<div class="field"><label>Titre *</label><input id="title" required placeholder="Ex. Contrôler les pompes du forage"></div>
+<div class="row"><div class="field"><label>Catégorie</label><select id="category"><option>Entretien</option><option>Arrosage</option><option>Électricité</option><option>Portail</option><option>Plomberie</option><option>Jardin</option><option>Commande</option><option>Sécurité</option><option>Autre</option></select></div><div class="field"><label>Lieu</label><input id="place" placeholder="Ex. Domaine principal"></div></div>
+<div class="row"><div class="field"><label>Date limite</label><input id="due" type="date"></div><div class="field"><label>Heure</label><input id="time" type="time"></div></div>
+<div class="row"><div class="field"><label>Priorité</label><select id="priority"><option>Normale</option><option>Urgente</option><option>Haute</option><option>Basse</option></select></div><div class="field"><label>Statut</label><select id="status"><option>À faire</option><option>En cours</option><option>En attente</option><option>Terminée</option></select></div></div>
+<div class="field"><label>Prestataire / responsable</label><select id="taskProvider"><option value="">Aucun</option></select></div>
+<div class="field"><label>Notes / compte rendu</label><textarea id="notes" placeholder="Détails, matériel, consignes, résultat..."></textarea></div>
+<div class="field"><label>Photos avant / après</label><label class="filelabel">📷 Ajouter des photos<input id="photos" type="file" accept="image/*" multiple style="display:none"></label><div id="photoPreview" class="photos"></div></div>
+<div class="modal-actions"><button type="button" class="cancel" onclick="taskDlg.close()">Annuler</button><button class="save">Enregistrer</button></div>
+</form></dialog>
+
+<dialog id="expenseDlg"><form class="modal" id="expenseForm"><h2>Nouvelle dépense</h2>
+<div class="field"><label>Objet *</label><input id="expenseLabel" required placeholder="Ex. Pièces portail"></div>
+<div class="row"><div class="field"><label>Montant (€) *</label><input id="expenseAmount" required type="number" min="0" step="0.01"></div><div class="field"><label>Date</label><input id="expenseDate" type="date"></div></div>
+<div class="field"><label>Fournisseur</label><input id="expenseVendor"></div><div class="field"><label>Notes</label><textarea id="expenseNotes"></textarea></div>
+<div class="modal-actions"><button type="button" class="cancel" onclick="expenseDlg.close()">Annuler</button><button class="save">Enregistrer</button></div></form></dialog>
+
+<dialog id="providerDlg"><form class="modal" id="providerForm"><h2>Nouveau prestataire</h2>
+<div class="field"><label>Nom / société *</label><input id="providerName" required></div><div class="field"><label>Métier</label><input id="providerTrade" placeholder="Électricien, plombier..."></div>
+<div class="field"><label>Téléphone</label><input id="providerPhone" type="tel"></div><div class="field"><label>E-mail</label><input id="providerEmail" type="email"></div><div class="field"><label>Notes</label><textarea id="providerNotes"></textarea></div>
+<div class="modal-actions"><button type="button" class="cancel" onclick="providerDlg.close()">Annuler</button><button class="save">Enregistrer</button></div></form></dialog>
+
+<dialog id="backupDlg"><div class="modal"><h2>Sauvegarde & rapports</h2>
+<p class="meta">Les données restent sur cet appareil. Fais régulièrement une sauvegarde pour éviter de les perdre.</p>
+<div class="quick"><button onclick="exportData()">⬇️ Exporter sauvegarde</button><button onclick="document.getElementById('importFile').click()">⬆️ Restaurer sauvegarde</button><button onclick="printReport()">🖨️ Rapport / PDF</button><button onclick="clearCompleted()">🧹 Archiver terminées</button></div>
+<input id="importFile" type="file" accept=".json,application/json" hidden onchange="importData(event)">
+<div class="modal-actions"><button class="cancel" onclick="backupDlg.close()">Fermer</button></div></div></dialog>
+
+<script>
+const KEY="domaineTasks_v2";
+let db=JSON.parse(localStorage.getItem(KEY)||'{"tasks":[],"expenses":[],"providers":[]}');
+if(!db.tasks)db.tasks=[];if(!db.expenses)db.expenses=[];if(!db.providers)db.providers=[];
+const $=id=>document.getElementById(id), todayISO=()=>new Date().toISOString().slice(0,10);
+$("today").textContent=new Intl.DateTimeFormat("fr-FR",{weekday:"long",day:"numeric",month:"long",year:"numeric"}).format(new Date());
+function save(){localStorage.setItem(KEY,JSON.stringify(db));renderAll()}
+function esc(s=""){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
+function eur(n){return new Intl.NumberFormat("fr-FR",{style:"currency",currency:"EUR"}).format(Number(n)||0)}
+function badge(p){return p==="Urgente"?"urgent":p==="Haute"?"high":p==="Basse"?"low":"normal"}
+function late(t){return t.due&&t.due<todayISO()&&t.status!=="Terminée"}
+function showPage(id,btn){document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));$(id).classList.add("active");document.querySelectorAll(".nav button").forEach(x=>x.classList.toggle("active",x.dataset.page===id));$("fab").style.display=id==="tasksPage"||id==="dashboardPage"?"block":"none";renderAll();scrollTo(0,0)}
+function taskHTML(t){
+ let provider=db.providers.find(p=>p.id===t.providerId);
+ return `<article class="task"><div class="task-top"><div><h3>${esc(t.title)}</h3><div class="meta">${t.category?"🏷️ "+esc(t.category)+" · ":""}${t.place?"📍 "+esc(t.place)+"<br>":""}${t.due?`<span class="${late(t)?"overdue":""}">📅 ${new Date(t.due+"T12:00").toLocaleDateString("fr-FR")}${t.time?" à "+esc(t.time):""}</span> · `:""}${esc(t.status)}${provider?"<br>👷 "+esc(provider.name):""}</div></div><span class="badge ${badge(t.priority)}">${esc(t.priority)}</span></div>${t.notes?`<div class="notes">${esc(t.notes)}</div>`:""}${t.photos?.length?`<div class="photos">${t.photos.map(x=>`<img src="${x}" alt="Photo">`).join("")}</div>`:""}<div class="actions"><button onclick="cycle('${t.id}')">Changer statut</button><button onclick="editTask('${t.id}')">Modifier</button><button class="danger" onclick="removeTask('${t.id}')">Supprimer</button></div></article>`
+}
+function renderTasks(){let q=$("search").value.toLowerCase(),f=$("filter").value;let arr=db.tasks.filter(t=>(!f||t.status===f)&&[t.title,t.place,t.notes,t.category].join(" ").toLowerCase().includes(q));arr.sort((a,b)=>(a.status==="Terminée")-(b.status==="Terminée")||(a.due||"9999").localeCompare(b.due||"9999"));$("tasks").innerHTML=arr.length?arr.map(taskHTML).join(""):'<div class="empty">Aucune tâche.<br>Appuie sur + pour en créer une.</div>'}
+function renderDashboard(){
+ $("sTodo").textContent=db.tasks.filter(t=>t.status==="À faire").length;$("sDoing").textContent=db.tasks.filter(t=>t.status==="En cours").length;$("sWaiting").textContent=db.tasks.filter(t=>t.status==="En attente").length;$("sDone").textContent=db.tasks.filter(t=>t.status==="Terminée").length;
+ $("mLate").textContent=db.tasks.filter(late).length;let ym=todayISO().slice(0,7),m=db.expenses.filter(e=>e.date?.startsWith(ym)).reduce((s,e)=>s+Number(e.amount),0);$("mMonth").textContent=eur(m);
+ let p=db.tasks.filter(t=>t.status!=="Terminée").sort((a,b)=>(late(b)-late(a))||(["Urgente","Haute","Normale","Basse"].indexOf(a.priority)-["Urgente","Haute","Normale","Basse"].indexOf(b.priority))||(a.due||"9999").localeCompare(b.due||"9999")).slice(0,4);$("priorityList").innerHTML=p.length?p.map(taskHTML).join(""):'<div class="empty">Tout est à jour 🎉</div>'
+}
+function renderAgenda(){let arr=db.tasks.filter(t=>t.due&&t.status!=="Terminée").sort((a,b)=>a.due.localeCompare(b.due));let groups={};arr.forEach(t=>(groups[t.due]??=[]).push(t));$("agenda").innerHTML=Object.keys(groups).length?Object.entries(groups).map(([d,ts])=>`<h3>${new Date(d+"T12:00").toLocaleDateString("fr-FR",{weekday:"long",day:"numeric",month:"long"})}</h3>${ts.map(taskHTML).join("")}`).join(""):'<div class="empty">Aucune échéance planifiée.</div>'}
+function renderExpenses(){let total=db.expenses.reduce((s,e)=>s+Number(e.amount),0),ym=todayISO().slice(0,7),month=db.expenses.filter(e=>e.date?.startsWith(ym)).reduce((s,e)=>s+Number(e.amount),0);$("expenseTotal").textContent=eur(total);$("expenseMonth").textContent=eur(month);$("expenses").innerHTML=db.expenses.length?[...db.expenses].sort((a,b)=>b.date.localeCompare(a.date)).map(e=>`<div class="card listrow"><div><b>${esc(e.label)}</b><div class="meta">${e.date?new Date(e.date+"T12:00").toLocaleDateString("fr-FR"):""}${e.vendor?" · "+esc(e.vendor):""}${e.notes?"<br>"+esc(e.notes):""}</div></div><div><div class="money">${eur(e.amount)}</div><button class="smallbtn danger" onclick="removeExpense('${e.id}')">×</button></div></div>`).join(""):'<div class="empty">Aucune dépense enregistrée.</div>'}
+function renderProviders(){$("providers").innerHTML=db.providers.length?db.providers.map(p=>`<div class="card"><b>${esc(p.name)}</b><div class="meta">${esc(p.trade||"")}${p.phone?"<br>📞 "+esc(p.phone):""}${p.email?"<br>✉️ "+esc(p.email):""}${p.notes?"<br>"+esc(p.notes):""}</div><div class="actions">${p.phone?`<button onclick="location.href='tel:${esc(p.phone)}'">Appeler</button>`:""}${p.email?`<button onclick="location.href='mailto:${esc(p.email)}'">E-mail</button>`:""}<button class="danger" onclick="removeProvider('${p.id}')">Supprimer</button></div></div>`).join(""):'<div class="empty">Aucun prestataire enregistré.</div>';let sel=$("taskProvider"),v=sel.value;sel.innerHTML='<option value="">Aucun</option>'+db.providers.map(p=>`<option value="${p.id}">${esc(p.name)}</option>`).join("");sel.value=v}
+function renderAll(){renderTasks();renderDashboard();renderAgenda();renderExpenses();renderProviders()}
+let pendingPhotos=[];
+function openTask(){$("taskForm").reset();$("editId").value="";$("taskModalTitle").textContent="Nouvelle tâche";$("due").value=todayISO();pendingPhotos=[];$("photoPreview").innerHTML="";renderProviders();$("taskDlg").showModal()}
+window.editTask=id=>{let t=db.tasks.find(x=>x.id===id);if(!t)return;$("editId").value=id;$("title").value=t.title;$("category").value=t.category||"Entretien";$("place").value=t.place||"";$("due").value=t.due||"";$("time").value=t.time||"";$("priority").value=t.priority;$("status").value=t.status;$("notes").value=t.notes||"";renderProviders();$("taskProvider").value=t.providerId||"";pendingPhotos=[...(t.photos||[])];showPhotoPreview();$("taskModalTitle").textContent="Modifier la tâche";$("taskDlg").showModal()}
+function showPhotoPreview(){$("photoPreview").innerHTML=pendingPhotos.map(x=>`<img src="${x}">`).join("")}
+$("photos").onchange=async e=>{for(const f of [...e.target.files]){if(pendingPhotos.length>=6)break;let data=await compressImage(f);pendingPhotos.push(data)}showPhotoPreview();e.target.value=""}
+function compressImage(file){return new Promise(res=>{let img=new Image(),r=new FileReader();r.onload=()=>img.src=r.result;img.onload=()=>{let max=900,s=Math.min(1,max/Math.max(img.width,img.height)),c=document.createElement("canvas");c.width=img.width*s;c.height=img.height*s;c.getContext("2d").drawImage(img,0,0,c.width,c.height);res(c.toDataURL("image/jpeg",.68))};r.readAsDataURL(file)})}
+$("taskForm").onsubmit=e=>{e.preventDefault();let id=$("editId").value,obj={id:id||String(Date.now()),title:$("title").value.trim(),category:$("category").value,place:$("place").value.trim(),due:$("due").value,time:$("time").value,priority:$("priority").value,status:$("status").value,providerId:$("taskProvider").value,notes:$("notes").value.trim(),photos:pendingPhotos,updated:new Date().toISOString()};if(id)db.tasks=db.tasks.map(t=>t.id===id?obj:t);else db.tasks.unshift(obj);try{save();$("taskDlg").close()}catch(err){alert("Stockage presque plein : retire quelques photos ou exporte une sauvegarde.")}}
+window.cycle=id=>{let o=["À faire","En cours","En attente","Terminée"],t=db.tasks.find(x=>x.id===id);t.status=o[(o.indexOf(t.status)+1)%o.length];save()}
+window.removeTask=id=>{if(confirm("Supprimer cette tâche ?")){db.tasks=db.tasks.filter(t=>t.id!==id);save()}}
+function openExpense(){$("expenseForm").reset();$("expenseDate").value=todayISO();$("expenseDlg").showModal()}
+$("expenseForm").onsubmit=e=>{e.preventDefault();db.expenses.unshift({id:String(Date.now()),label:$("expenseLabel").value.trim(),amount:Number($("expenseAmount").value),date:$("expenseDate").value,vendor:$("expenseVendor").value.trim(),notes:$("expenseNotes").value.trim()});save();$("expenseDlg").close()}
+window.removeExpense=id=>{if(confirm("Supprimer cette dépense ?")){db.expenses=db.expenses.filter(e=>e.id!==id);save()}}
+function openProvider(){$("providerForm").reset();$("providerDlg").showModal()}
+$("providerForm").onsubmit=e=>{e.preventDefault();db.providers.push({id:String(Date.now()),name:$("providerName").value.trim(),trade:$("providerTrade").value.trim(),phone:$("providerPhone").value.trim(),email:$("providerEmail").value.trim(),notes:$("providerNotes").value.trim()});save();$("providerDlg").close()}
+window.removeProvider=id=>{if(confirm("Supprimer ce prestataire ?")){db.providers=db.providers.filter(p=>p.id!==id);save()}}
+function openBackup(){$("backupDlg").showModal()}
+function exportData(){let blob=new Blob([JSON.stringify(db,null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="domaine-tasks-sauvegarde-"+todayISO()+".json";a.click();URL.revokeObjectURL(a.href)}
+function importData(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let x=JSON.parse(r.result);if(!x.tasks)throw 0;if(confirm("Remplacer les données actuelles par cette sauvegarde ?")){db={tasks:x.tasks||[],expenses:x.expenses||[],providers:x.providers||[]};save();$("backupDlg").close()}}catch{alert("Fichier de sauvegarde invalide.")}};r.readAsText(f);e.target.value=""}
+function printReport(){showPage("tasksPage");setTimeout(()=>window.print(),200)}
+function clearCompleted(){if(confirm("Supprimer toutes les tâches terminées ? Pense à exporter une sauvegarde avant.")){db.tasks=db.tasks.filter(t=>t.status!=="Terminée");save()}}
+$("search").oninput=renderTasks;$("filter").onchange=renderTasks;
+renderAll();
+</script>
+</body>
+</html>
