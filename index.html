@@ -484,11 +484,12 @@ header{background:linear-gradient(120deg,#0f2748 0%,#214f83 52%,#3676aa 100%);bo
 <div class="sectionBack"><button onclick="goHome()" type="button">🏠 Retour au menu</button></div>
 </section>
 
+<section hidden id="patronView"><div class="top card"><div><h2 style="margin:0">👔 Espace Patron</h2><span class="meta">Suivi simple du Domaine Les Bois de Peygros</span></div></div><div class="stats"><div class="stat"><b id="patronValidate">0</b><span>À valider</span></div><div class="stat"><b id="patronQuotes">0</b><span>Devis</span></div><div class="stat"><b id="patronDoing">0</b><span>En cours</span></div><div class="stat"><b id="patronDone">0</b><span>Réalisé</span></div></div><div class="card"><h3 class="sectionTitle">📌 Suivi & échanges</h3><div class="meta" style="margin-bottom:10px">Ouvrez un élément pour répondre, valider ou demander une modification.</div><div id="patronTasks"></div></div><div class="sectionBack"><button onclick="goView('dashboard')" type="button">🏠 Retour au menu</button></div></section>
 <section hidden="" id="usersView"><h2>👥 Accès équipe</h2><div class="card"><p class="meta">Administrateur = accès complet. Maison = tâches Maison + stock Maison. Sécurité = permanence, main courante et caméras en lecture seule.</p></div><div id="users"></div><div class="sectionBack"><button onclick="goView('dashboard')" type="button">🏠 Retour au menu</button></div></section>
 </main></section>
 <dialog id="dlg"><form class="modal" id="form"><h2 id="dlgTitle"></h2><div id="fields"></div><div class="modal-actions"><button class="btn ghost" onclick="dlg.close()" type="button">Annuler</button><button class="btn">Enregistrer</button></div></form></dialog>
 <script>
-const sb=supabase.createClient("https://upsensfqfjyithssrydn.supabase.co","sb_publishable_naF7b7hx6LGeHZHPhSgUQQ_iEE41ACF");const $=x=>document.getElementById(x),E=s=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));let me=null,role="maison",D={tasks:[],stock:[],assets:[],cameras:[],wifi:[],systems:[],locations:[],orders:[],meters:[],docs:[],contacts:[],expenses:[],profiles:[],personnel:[],absences:[],events:[],securityLogs:[],securityShifts:[]},mode="",editId=null;
+const sb=supabase.createClient("https://upsensfqfjyithssrydn.supabase.co","sb_publishable_naF7b7hx6LGeHZHPhSgUQQ_iEE41ACF");const $=x=>document.getElementById(x),E=s=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));let me=null,role="maison",D={tasks:[],stock:[],assets:[],cameras:[],wifi:[],systems:[],locations:[],orders:[],meters:[],docs:[],contacts:[],expenses:[],profiles:[],personnel:[],absences:[],events:[],securityLogs:[],securityShifts:[],taskComments:[],taskApprovals:[]},mode="",editId=null;
 async function boot(){let {data:{session}}=await sb.auth.getSession();show(session);sb.auth.onAuthStateChange((_e,s)=>show(s))}
 async function show(s){
   const auth=document.getElementById("auth");
@@ -496,15 +497,19 @@ async function show(s){
   if(auth)auth.hidden=true;
   if(app)app.hidden=false;
   window.scrollTo({top:0,left:0,behavior:"auto"});$("auth").hidden=!!s;$("app").hidden=!s;if(!s)return;me=s.user;let {data}=await sb.from("profiles").select("*").eq("id",me.id).maybeSingle();role=data?.role||"maison";
-  const roleLabel=role==="admin"?"ADMINISTRATEUR":role==="security"?"SÉCURITÉ":"MAISON";
+  const roleLabel=role==="admin"?"ADMINISTRATEUR":role==="security"?"SÉCURITÉ":role==="patron"?"PATRON":"MAISON";
   $("identity").innerHTML=E(me.email)+' <span class="role">'+roleLabel+"</span>";
   document.querySelectorAll(".admin,.adminBox").forEach(x=>x.hidden=role!=="admin");
   document.querySelectorAll(".securityNav").forEach(x=>x.hidden=!(role==="admin"||role==="security"));
+  document.querySelectorAll(".patronNav").forEach(x=>x.hidden=!(role==="admin"||role==="patron"));
   if(role==="security"){
     document.querySelectorAll("#nav button").forEach(x=>x.hidden=!x.classList.contains("securityNav") && x.dataset.v!=="cameras");
   }
+  if(role==="patron"){
+    document.querySelectorAll("#nav button").forEach(x=>x.hidden=x.dataset.v!=="dashboard" && x.dataset.v!=="patron" && x.dataset.v!=="tasks" && x.dataset.v!=="agenda");
+  }
   await refresh();live();
-  if(role==="security")goView("security")}
+  if(role==="security")goView("security"); else if(role==="patron")goView("patron")}
 $("login").onsubmit=async e=>{
   e.preventDefault();
   const msg=$("msg");
@@ -545,6 +550,13 @@ async function refresh(){
   D.tasks=base[0].data||[];
   D.stock=base[1].data||[];
   D.events=base[2].data||[];
+  if(role==="patron"||role==="admin"){
+    const [tc,ta]=await Promise.all([
+      sb.from("task_comments").select("*").order("created_at",{ascending:true}),
+      sb.from("task_approvals").select("*").order("created_at",{ascending:false})
+    ]);
+    D.taskComments=tc.data||[]; D.taskApprovals=ta.data||[];
+  }
 
   if(role==="admin"){
     const [assets,cameras,wifi,systems,locations,orders,meters,docs,contacts,expenses,profiles,personnel,absences]=await Promise.all([
@@ -600,7 +612,7 @@ async function refresh(){
   render();
 }
 let channel;function live(){if(channel)return;channel=sb.channel("ultimate").on("postgres_changes",{event:"*",schema:"public",table:"tasks"},refresh).on("postgres_changes",{event:"*",schema:"public",table:"calendar_events"},refresh).on("postgres_changes",{event:"*",schema:"public",table:"stock_items"},refresh).on("postgres_changes",{event:"*",schema:"public",table:"assets"},refresh).on("postgres_changes",{event:"*",schema:"public",table:"cameras"},refresh).on("postgres_changes",{event:"*",schema:"public",table:"wifi_networks"},refresh).on("postgres_changes",{event:"*",schema:"public",table:"personnel"},refresh).on("postgres_changes",{event:"*",schema:"public",table:"personnel_absences"},refresh).on("postgres_changes",{event:"*",schema:"public",table:"expenses"},refresh).on("postgres_changes",{event:"*",schema:"public",table:"technical_systems"},refresh).on("postgres_changes",{event:"*",schema:"public",table:"locations"},refresh).on("postgres_changes",{event:"*",schema:"public",table:"purchase_orders"},refresh).on("postgres_changes",{event:"*",schema:"public",table:"meter_readings"},refresh).on("postgres_changes",{event:"*",schema:"public",table:"documents"},refresh).on("postgres_changes",{event:"*",schema:"public",table:"security_logs"},refresh).on("postgres_changes",{event:"*",schema:"public",table:"security_shifts"},refresh).subscribe()}
-function goView(v){let b=document.querySelector(`#nav button[data-v="${v}"]`);if(!b||b.hidden)return;document.querySelectorAll("#nav button").forEach(x=>x.classList.toggle("on",x===b));["dashboard","tasks","agenda","stock","assets","cameras","wifi","systems","locations","orders","meters","docs","contacts","companies","employers","reports","expenses","personnel","users","security"].forEach(x=>$(x+"View").hidden=x!==v);window.scrollTo({top:0,behavior:"smooth"})}
+function goView(v){if(v==="patron")renderPatron();let b=document.querySelector(`#nav button[data-v="${v}"]`);if(!b||b.hidden)return;document.querySelectorAll("#nav button").forEach(x=>x.classList.toggle("on",x===b));["dashboard","tasks","agenda","stock","assets","cameras","wifi","systems","locations","orders","meters","docs","contacts","companies","employers","reports","expenses","personnel","users","security"].forEach(x=>$(x+"View").hidden=x!==v);window.scrollTo({top:0,behavior:"smooth"})}
 document.querySelectorAll("#nav button").forEach(b=>b.onclick=()=>{if(b.hidden)return;document.querySelectorAll("#nav button").forEach(x=>x.classList.toggle("on",x===b));["dashboard","tasks","agenda","stock","assets","cameras","wifi","systems","locations","orders","meters","docs","contacts","companies","employers","reports","expenses","personnel","users"].forEach(v=>$(v+"View").hidden=v!==b.dataset.v)})
 
 function previewLine(icon,label,value){
@@ -741,6 +753,32 @@ function renderStock(){
   if(stockArea==="maison"&&$("homeStockSearch")&&$("homeStockSearch").value!==homeStockQuery)$("homeStockSearch").value=homeStockQuery;
   $("stock").innerHTML=a.length?a.map(x=>{let q=Number(x.quantity),r=Number(x.reorder_level),m=Number(x.minimum_level),cl=q<=r?"bad":q<=m?"warn":"ok",txt=q<=r?"À COMMANDER":q<=m?"STOCK FAIBLE":"OK";return `<div class="card ${stockArea==="jardin"?"gardenStockCard":""}" data-home-stock-search="${E(normStock([x.name,x.category,cleanStockLocation(x),x.unit].filter(Boolean).join(" ")))}" ${stockArea==="jardin"?`data-garden-search="${E(gardenText(x))}"`:""}><div class="top"><div><b>${E(x.name)}</b><div class="meta">${stockArea==="jardin"?E(gardenCategoryOf(x))+(gardenSubCategoryOf(x)!=="Tous"?" · "+E(gardenSubCategoryOf(x)):""):E(x.category||"")}${cleanStockLocation(x)?" · "+E(cleanStockLocation(x)):""}</div></div><div style="display:flex;gap:5px;align-items:center">${stockArea==="jardin"?`<button class="gardenFav ${isGardenFav(x.id)?"on":""}" onclick="toggleGardenFav('${x.id}')" title="Favori">★</button>`:""}<span class="badge ${cl}">${txt}</span></div></div><div class="stockQty"><button onclick="adjustStock('${x.id}',-1)" aria-label="Retirer une unité">−</button><div class="qty">${E(x.quantity)}</div><button onclick="adjustStock('${x.id}',1)" aria-label="Ajouter une unité">＋</button></div><div class="stockSimpleMeta">${E(x.unit||"unité")} · seuil commande : ${E(x.reorder_level)}</div><div class="actions"><button onclick="editStock('${x.id}')">⚙️ Modifier</button>${(role==="admin"||stockArea==="maison")?`<button class="danger" onclick="deleteItem('stock_items','${x.id}','${E(x.name)}')">🗑️ Supprimer</button>`:""}</div></div>`}).join(""):`<div class="card empty">${stockArea==="jardin"&&all.length?"Aucun article ne correspond à la recherche ou aux filtres.":"Aucun article dans ce stock."}</div>`
 }
+function renderPatron(){
+  if(!$("patronTasks"))return;
+  let visible=(D.tasks||[]).filter(t=>!String(t.title||"").startsWith("[SIGNALEMENT]"));
+  const isDone=t=>["Terminée","Terminé","Réalisé"].includes(t.status);
+  $("patronValidate").textContent=visible.filter(t=>t.status==="À valider").length;
+  $("patronQuotes").textContent=visible.filter(t=>t.status==="Devis à valider").length;
+  $("patronDoing").textContent=visible.filter(t=>t.status==="En cours").length;
+  $("patronDone").textContent=visible.filter(isDone).length;
+  let ordered=[...visible].sort((a,b)=>new Date(b.created_at||0)-new Date(a.created_at||0));
+  $("patronTasks").innerHTML=ordered.length?ordered.slice(0,30).map(t=>{
+    let comments=(D.taskComments||[]).filter(c=>c.task_id===t.id);
+    let approval=(D.taskApprovals||[]).find(a=>a.task_id===t.id);
+    return `<div class="card"><div class="top"><div><b>${E(t.title)}</b><div class="meta">${E(t.place||t.category||"")} · ${E(t.status||"À faire")}</div></div>${approval?`<span class="badge ${approval.decision==="Validé"?"ok":"warn"}">${E(approval.decision)}</span>`:""}</div>${taskPhotoUrl(t)?`<img class="taskPhoto" src="${E(taskPhotoUrl(t))}" alt="">`:""}${taskCleanNotes(t)?`<p>${E(taskCleanNotes(t))}</p>`:""}${comments.length?`<div style="margin-top:9px">${comments.slice(-4).map(c=>`<div class="reportNote"><b>${c.user_id===me?.id?"Patron":"Équipe"}</b> ${E(c.body)}<small>${new Date(c.created_at).toLocaleString("fr-FR")}</small></div>`).join("")}</div>`:""}<div class="actions">${role==="patron"?`<button onclick="patronComment('${t.id}')">💬 Répondre</button><button class="taskDoneBtn" onclick="patronDecision('${t.id}','Validé')">✅ Valider</button><button onclick="patronDecision('${t.id}','À revoir')">↩️ À revoir</button>`:""}</div></div>`
+  }).join(""):'<div class="empty">Aucun élément à afficher.</div>';
+}
+async function patronComment(taskId){
+  let body=prompt("Votre message pour l’équipe :"); if(!body||!body.trim())return;
+  let {error}=await sb.from("task_comments").insert({task_id:taskId,user_id:me.id,body:body.trim()});
+  if(error)return alert(error.message); await refresh(); renderPatron();
+}
+async function patronDecision(taskId,decision){
+  let note=prompt(decision==="Validé"?"Commentaire (facultatif) :":"Que faut-il revoir ?")||"";
+  let {error}=await sb.from("task_approvals").insert({task_id:taskId,user_id:me.id,decision,note:note.trim()||null});
+  if(error)return alert(error.message); await refresh(); renderPatron();
+}
+
 let assetArea="vehicle";
 function isVehicleAsset(a){return String(a.asset_type||"").toLowerCase()==="véhicule"||String(a.asset_type||"").toLowerCase()==="vehicule"}
 window.setAssetArea=a=>{assetArea=a;$("assetVehicleTab")?.classList.toggle("on",a==="vehicle");$("assetEquipmentTab")?.classList.toggle("on",a==="equipment");renderAssets()}
